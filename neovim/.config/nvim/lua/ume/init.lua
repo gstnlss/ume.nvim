@@ -1,0 +1,1 @@
+require('ume.config.lazy')

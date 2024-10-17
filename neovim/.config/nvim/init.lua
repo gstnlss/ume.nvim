@@ -1,4 +1,7 @@
+local utils = require('ume.utils')
+
 vim.g.mapleader = ' '
+vim.g.maplocalleader = "\\"
 
 -- Options
 local options = {
@@ -20,8 +23,8 @@ end
 
 -- Keymaps
 local keymaps = {
-  { 'n', '<leader>ee', '<CMD>Lexplore<CR>' },
-  { 'n', '<leader>ef', '<CMD>Lexplore %:p:h<CR>' },
+  { 'n', '<leader>ee', '<CMD>Vexplore<CR>' },
+  { 'n', '<leader>ef', '<CMD>Vexplore %:p:h<CR>' },
   { 'n', '<leader>b', '<CMD>buffers<CR>:buffer ' },
   { 'n', '<leader>tn', '<CMD>tabnew<CR>' },
   { 'n', '<leader>tc', '<CMD>tabclose<CR>' },
@@ -29,20 +32,17 @@ local keymaps = {
   { 'n', '<leader>tl', '<CMD>tabnext<CR>' },
 }
 
-for _, v in ipairs(keymaps) do
-  local modes = v[1]
-  local keys = v[2]
-  local action = v[3]
-
-  vim.keymap.set(modes, keys, action)
-end
-
+utils.set_keymaps(keymaps)
 
 -- Netrw
 vim.g.netrw_keepdir = 0
 vim.g.netrw_winsize = 30
 vim.g.netrw_banner = 0
-vim.g.netrw_liststyle = 3
+-- vim.g.netrw_liststyle = 3
 vim.g.netrw_browse_split = 4
 
 vim.cmd[[au FileType netrw setl bufhidden=wipe]]
+
+require('ume')
+
+vim.cmd[[colorscheme tokyonight]]
