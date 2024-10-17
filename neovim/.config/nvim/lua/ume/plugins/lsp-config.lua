@@ -15,12 +15,14 @@ return {
   },
   {
     "neovim/nvim-lspconfig",
+    dependencies = { "hrsh7th/cmp-nvim-lsp" },
     config = function()
       local utils = require("ume.utils")
       local lspconfig = require("lspconfig")
+      local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
-      lspconfig.lua_ls.setup({})
-      lspconfig.ansiblels.setup({})
+      lspconfig.lua_ls.setup({ capabilities = capabilities })
+      lspconfig.ansiblels.setup({ capabilities = capabilities })
 
       vim.api.nvim_create_autocmd("LspAttach", {
         callback = function(args)
