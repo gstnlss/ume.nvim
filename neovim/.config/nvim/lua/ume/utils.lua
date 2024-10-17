@@ -26,4 +26,4 @@ M.set_lsp_keymaps = function(client_id, keymaps)
   end
 end
 
-return M;
+return M
