@@ -9,7 +9,7 @@ return {
     "williamboman/mason-lspconfig.nvim",
     config = function()
       require("mason-lspconfig").setup({
-        ensure_installed = { "lua_ls", "ansiblels" },
+        ensure_installed = { "lua_ls", "ansiblels", "ts_ls" },
       })
     end,
   },
@@ -52,6 +52,7 @@ return {
   },
   {
     "nvimtools/none-ls.nvim",
+    dependencies = { "nvimtools/none-ls-extras.nvim" },
     config = function()
       local null_ls = require("null-ls")
       local augroup = vim.api.nvim_create_augroup("LspFormatting", {})
@@ -62,7 +63,9 @@ return {
           null_ls.builtins.formatting.prettierd.with({
             extra_filetypes = { "yaml.ansible" },
           }),
+          require("none-ls.formatting.eslint_d"),
           null_ls.builtins.diagnostics.ansiblelint,
+          require("none-ls.diagnostics.eslint_d"),
         },
         on_attach = function(client, bufnr)
           if client.supports_method("textDocument/formatting") then
@@ -76,6 +79,20 @@ return {
             })
           end
         end,
+      })
+    end,
+  },
+  {
+    "pmizio/typescript-tools.nvim",
+    dependencies = { "nvim-lua/plenary.nvim", "neovim/nvim-lspconfig" },
+    config = function()
+      require("typescript-tools").setup({
+        settings = {
+          expose_as_code_action = "all",
+          jsx_close_tag = {
+            enable = true,
+          },
+        },
       })
     end,
   },
