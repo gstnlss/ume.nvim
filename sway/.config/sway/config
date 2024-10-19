@@ -7,7 +7,7 @@
 ### Variables
 #
 # Logo key. Use Mod1 for Alt.
-set $mod Mod1
+set $mod Mod4
 # Home row direction keys, like vim
 set $left h
 set $down j
@@ -23,8 +23,11 @@ default_border pixel 1
 ### Output configuration
 #
 # Default wallpaper (more resolutions are available in /usr/share/backgrounds/sway/)
-output Virtual-1 bg /usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png fill
-output Virtual-1 resolution 1920x1080 position 0,0
+output DP-1 bg $HOME/images/wallpapers/tokyonight01.jpg fill
+output DP-1 mode 1920x1080@120Hz position 0,0
+
+output DP-2 bg $HOME/images/wallpapers/tokyonight02.jpg fill
+output DP-2 mode 1920x1080@120Hz position 1920,0
 
 #
 # Example configuration:
