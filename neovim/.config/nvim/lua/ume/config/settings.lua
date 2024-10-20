@@ -16,6 +16,7 @@ local options = {
   signcolumn = "yes",
   updatetime = 100,
   sessionoptions = "blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions",
+  swapfile = false,
 }
 
 for k, v in pairs(options) do
