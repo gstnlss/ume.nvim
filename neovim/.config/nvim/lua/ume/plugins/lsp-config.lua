@@ -9,7 +9,7 @@ return {
     "williamboman/mason-lspconfig.nvim",
     config = function()
       require("mason-lspconfig").setup({
-        ensure_installed = { "lua_ls", "ansiblels", "ts_ls", "bashls" },
+        ensure_installed = { "lua_ls", "ansiblels", "ts_ls", "bashls", "rust_analyzer" },
       })
     end,
   },
@@ -23,7 +23,8 @@ return {
 
       lspconfig.lua_ls.setup({ capabilities = capabilities })
       lspconfig.ansiblels.setup({ capabilities = capabilities })
-      lspconfig.bashls.setup({ capabilities = capabilities, filetypes = { "sh", "zsh" } })
+      lspconfig.bashls.setup({ capabilities = capabilities, filetypes = { "sh", "bash", "zsh" } })
+      lspconfig.rust_analyzer.setup({ capabilities = capabilities })
 
       vim.api.nvim_create_autocmd("LspAttach", {
         callback = function(args)
@@ -65,6 +66,7 @@ return {
             extra_filetypes = { "yaml.ansible" },
           }),
           require("none-ls.formatting.eslint_d"),
+          require("none-ls.formatting.rustfmt"),
           null_ls.builtins.diagnostics.ansiblelint,
           require("none-ls.diagnostics.eslint_d"),
         },
