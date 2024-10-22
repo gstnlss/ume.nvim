@@ -219,7 +219,11 @@ bar {
       inactive_workspace $base  $base     $text
       urgent_workspace   $base  $red      $crust
     }
+
+    font "Iosevka Nerd Font Bold Italic 11"
 }
+
+font "Iosevka Nerd Font Bold Italic 11"
 
 client.focused           $lavender $base $text  $rosewater $lavender
 client.focused_inactive  $overlay0 $base $text  $rosewater $overlay0
