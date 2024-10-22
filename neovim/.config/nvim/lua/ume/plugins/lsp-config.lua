@@ -32,6 +32,8 @@ return {
             ["textDocument/rename"] = { "n", "<leader>lr", vim.lsp.buf.rename },
             ["textDocument/implementation"] = { "n", "gi", vim.lsp.buf.implementation },
             ["textDocument/references"] = { "n", "gr", vim.lsp.buf.references },
+            ["textDocument/definition"] = { "n", "gd", vim.lsp.buf.definition },
+            ["textDocument/declaration"] = { "n", "gD", vim.lsp.buf.declaration },
             ["textDocument/codeAction"] = { "n", "<leader>ca", vim.lsp.buf.code_action },
             ["textDocument/formatting"] = {
               "n",
