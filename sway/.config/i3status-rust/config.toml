@@ -22,7 +22,7 @@ format = "[$icon cpu$utilization]"
 
 [[block]]
 block = "memory"
-format = "[$icon mem$mem_used.eng(prefix:Mi) $icon_swap $swap_used.eng(prefix:Mi)]"
+format = "[$icon mem $mem_used.eng(prefix:Mi) $icon_swap swap$swap_used.eng(prefix:Mi)]"
 
 [[block]] 
 block = "amd_gpu"
