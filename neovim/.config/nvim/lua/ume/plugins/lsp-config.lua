@@ -9,7 +9,7 @@ return {
     "williamboman/mason-lspconfig.nvim",
     config = function()
       require("mason-lspconfig").setup({
-        ensure_installed = { "lua_ls", "ansiblels", "ts_ls", "bashls", "rust_analyzer" },
+        ensure_installed = { "lua_ls", "ansiblels", "ts_ls", "bashls", "rust_analyzer", "ruby_lsp" },
       })
     end,
   },
@@ -25,6 +25,7 @@ return {
       lspconfig.ansiblels.setup({ capabilities = capabilities })
       lspconfig.bashls.setup({ capabilities = capabilities, filetypes = { "sh", "bash", "zsh" } })
       lspconfig.rust_analyzer.setup({ capabilities = capabilities })
+      lspconfig.ruby_lsp.setup({ capabilities = capabilities })
 
       vim.api.nvim_create_autocmd("LspAttach", {
         callback = function(args)
@@ -69,8 +70,10 @@ return {
           }),
           require("none-ls.formatting.eslint_d"),
           require("none-ls.formatting.rustfmt"),
+          null_ls.builtins.formatting.rubocop,
           null_ls.builtins.diagnostics.ansiblelint,
           require("none-ls.diagnostics.eslint_d"),
+          null_ls.builtins.diagnostics.rubocop,
         },
         on_attach = function(client, bufnr)
           if client.supports_method("textDocument/formatting") then
