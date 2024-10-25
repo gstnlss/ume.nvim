@@ -9,7 +9,7 @@ return {
     "williamboman/mason-lspconfig.nvim",
     config = function()
       require("mason-lspconfig").setup({
-        ensure_installed = { "lua_ls", "ansiblels", "ts_ls", "bashls", "rust_analyzer", "ruby_lsp" },
+        ensure_installed = { "lua_ls", "ansiblels", "ts_ls", "bashls", "rust_analyzer" },
       })
     end,
   },
@@ -25,7 +25,7 @@ return {
       lspconfig.ansiblels.setup({ capabilities = capabilities })
       lspconfig.bashls.setup({ capabilities = capabilities, filetypes = { "sh", "bash", "zsh" } })
       lspconfig.rust_analyzer.setup({ capabilities = capabilities })
-      lspconfig.ruby_lsp.setup({ capabilities = capabilities })
+      lspconfig.ruby_lsp.setup({ capabilities = capabilities }) -- better to install manually because of version conflicts
 
       vim.api.nvim_create_autocmd("LspAttach", {
         callback = function(args)
