@@ -2,8 +2,8 @@
 
 stow_dotfile() {
   if [ -d "./$1" ]; then
-    stow -D $1
-    stow -S $1
+    stow -D --dotfiles $1
+    stow -S --dotfiles $1
     echo "info: '$1' installed."
     return 0
   else

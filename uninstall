@@ -2,7 +2,7 @@
 
 unstow_dotfile() {
   if [ -d "./$1" ]; then
-    stow -D $1
+    stow -D --dotfiles $1
     echo "info: '$1' uninstalled."
     return 0
   else
