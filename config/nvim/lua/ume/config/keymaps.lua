@@ -1,14 +1,21 @@
 local utils = require("ume.utils")
 
 local keymaps = {
-  { "n", "<leader>q", "<CMD>wqall<CR>" },
+  { "n", "<leader>q",  "<CMD>wqall<CR>" },
   -- tab keymaps
   { "n", "<leader>tn", "<CMD>tabnew<CR>" },
   { "n", "<leader>tc", "<CMD>tabclose<CR>" },
   { "n", "<leader>th", "<CMD>tabprevious<CR>" },
   { "n", "<leader>tl", "<CMD>tabnext<CR>" },
   -- buffer keymaps
-  { "n", "<leader>bd", "<CMD>bdelete<CR>" },
+  {
+    "n",
+    "<leader>bd",
+    function()
+      vim.cmd([[Neotree close]])
+      vim.cmd([[bdelete]])
+    end,
+  },
   {
     "n",
     "<leader>bc",
