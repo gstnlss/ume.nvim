@@ -74,6 +74,7 @@ return {
           null_ls.builtins.diagnostics.ansiblelint,
           require("none-ls.diagnostics.eslint_d"),
           null_ls.builtins.diagnostics.rubocop,
+          null_ls.builtins.diagnostics.haml_lint,
         },
         on_attach = function(client, bufnr)
           if client.supports_method("textDocument/formatting") then
