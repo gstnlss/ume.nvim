@@ -8,13 +8,14 @@ return {
       local builtin = require("telescope.builtin")
 
       local keymaps = {
+        { "n", "<leader>ft", ":Telescope<CR>" },
         { "n", "<leader>ff", builtin.find_files },
         { "n", "<leader>fv", builtin.git_files },
         { "n", "<leader>fg", builtin.live_grep },
         { "n", "<leader>fb", builtin.buffers },
         { "n", "<leader>fd", builtin.help_tags },
         { "n", "<leader>fc", builtin.git_status },
-        { "n", "<leader>fr", "<CMD>Telescope resume<CR>" },
+        { "n", "<leader>fr", ":Telescope resume<CR>" },
         {
           "n",
           "<leader>fh",

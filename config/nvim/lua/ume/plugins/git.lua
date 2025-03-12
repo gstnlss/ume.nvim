@@ -12,8 +12,9 @@ return {
     config = function()
       local utils = require("ume.utils")
       local keymaps = {
-        { "n", "<leader>gs", "<CMD>Git<CR>" },
-        { "n", "<leader>gb", "<CMD>Git blame<CR>" },
+        { "n", "<leader>gs", ":Git<CR>" },
+        { "n", "<leader>gb", ":Git blame<CR>" },
+        { "n", "<leader>gc", ":Telescope git_branches<CR>" },
       }
 
       utils.set_keymaps(keymaps)
