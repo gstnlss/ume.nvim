@@ -1,6 +1,6 @@
 return {
   {
-    "hrsh7th/nvim-cmp",
+    "gstnlss/nvim-cmp",
     dependencies = {
       "L3MON4D3/LuaSnip",
       "hrsh7th/cmp-nvim-lsp",
@@ -24,8 +24,19 @@ return {
         mapping = cmp.mapping.preset.insert({
           ["<C-b>"] = cmp.mapping.scroll_docs(-4),
           ["<C-f>"] = cmp.mapping.scroll_docs(4),
-          ["<C-e>"] = cmp.mapping.abort(),
+          ["<C-e>"] = cmp.mapping.complete(),
           ["<CR>"] = cmp.mapping.confirm({ select = true }),
+          ["<Tab>"] = cmp.mapping(function(fallback)
+            if cmp.visible() then
+              local entry = cmp.get_selected_entry()
+              if not entry then
+                cmp.select_next_item({ behavior = cmp.SelectBehavior.Select })
+              end
+              cmp.confirm()
+            else
+              fallback()
+            end
+          end, { "i", "s", "c" }),
         }),
         sources = cmp.config.sources({
           { name = "nvim_lsp" },
@@ -34,6 +45,9 @@ return {
           { name = "buffer" },
           { name = "path" },
         }),
+        experimental = {
+          ghost_text = true,
+        },
       })
     end,
   },

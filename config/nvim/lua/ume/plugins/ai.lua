@@ -51,6 +51,9 @@ return {
           inline = { adapter = "qwen" },
         },
         adapters = {
+          opts = {
+            show_defaults = false,
+          },
           qwen = ollama_adapter({ "qwen2.5-coder:7b", "qwen2.5-coder:1.5b" }),
           llama = ollama_adapter("llama3.2:3b"),
           codellama = ollama_adapter("codellama:13b"),
