@@ -1,5 +1,3 @@
--- Choose default model from a list of preferred models. Fall back to first
--- available.
 local function preferred_model_picker(preferred)
   return function(self)
     if self == nil then
@@ -22,6 +20,20 @@ local function preferred_model_picker(preferred)
   end
 end
 
+local function ollama_adapter(models)
+  if type(models) ~= "table" then
+    models = { models }
+  end
+
+  return require("codecompanion.adapters").extend("ollama", {
+    schema = {
+      model = {
+        default = preferred_model_picker(models),
+      },
+    },
+  })
+end
+
 return {
   {
     "olimorris/codecompanion.nvim",
@@ -35,34 +47,14 @@ return {
 
       companion.setup({
         strategies = {
-          chat = { adapter = "ollama" },
-          inline = { adapter = "ollama_inline" },
+          chat = { adapter = "qwen" },
+          inline = { adapter = "qwen" },
         },
         adapters = {
-          ollama = function()
-            return require("codecompanion.adapters").extend("ollama", {
-              schema = {
-                model = {
-                  default = preferred_model_picker({
-                    "qwen2.5-coder:14b",
-                    "qwen2.5-coder:7b",
-                    "qwen2.5-coder:3b",
-                    "qwen2.5-coder:1.5b",
-                    "qwen2.5-coder:0.5b",
-                  }),
-                },
-              },
-            })
-          end,
-          ollama_inline = function()
-            return require("codecompanion.adapters").extend("ollama", {
-              schema = {
-                model = {
-                  default = "qwen2.5-coder:1.5b",
-                },
-              },
-            })
-          end,
+          qwen = ollama_adapter({ "qwen2.5-coder:7b", "qwen2.5-coder:1.5b" }),
+          llama = ollama_adapter("llama3.2:3b"),
+          codellama = ollama_adapter("codellama:13b"),
+          codegemma = ollama_adapter("codegemma:7b"),
         },
       })
 
