@@ -71,6 +71,7 @@ return {
           require("none-ls.formatting.eslint_d"),
           require("none-ls.formatting.rustfmt"),
           null_ls.builtins.formatting.rubocop,
+          null_ls.builtins.formatting.opentofu_fmt,
           null_ls.builtins.diagnostics.ansiblelint,
           require("none-ls.diagnostics.eslint_d"),
           null_ls.builtins.diagnostics.rubocop,
