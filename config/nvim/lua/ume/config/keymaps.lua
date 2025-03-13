@@ -1,12 +1,12 @@
 local utils = require("ume.utils")
 
 local keymaps = {
-  { "n", "<leader>q",  "<CMD>wqall<CR>" },
+  { "n", "<leader>q", ":wqall<CR>" },
   -- tab keymaps
-  { "n", "<leader>tn", "<CMD>tabnew<CR>" },
-  { "n", "<leader>tc", "<CMD>tabclose<CR>" },
-  { "n", "<leader>th", "<CMD>tabprevious<CR>" },
-  { "n", "<leader>tl", "<CMD>tabnext<CR>" },
+  { "n", "<leader>tn", ":tabnew<CR>" },
+  { "n", "<leader>tc", ":tabclose<CR>" },
+  { "n", "[t", ":tabprevious<CR>" },
+  { "n", "]t", ":tabnext<CR>" },
   -- buffer keymaps
   {
     "n",
@@ -25,6 +25,8 @@ local keymaps = {
       vim.api.nvim_buf_delete(no_name_buf, {})
     end,
   },
+  { "n", "[b", ":bprevious<CR>" },
+  { "n", "]b", ":bnext<CR>" },
 }
 
 utils.set_keymaps(keymaps)

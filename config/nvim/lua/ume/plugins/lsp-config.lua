@@ -15,11 +15,12 @@ return {
   },
   {
     "neovim/nvim-lspconfig",
-    dependencies = { "hrsh7th/cmp-nvim-lsp" },
+    dependencies = { "hrsh7th/cmp-nvim-lsp", "nvim-telescope/telescope.nvim" },
     config = function()
       local utils = require("ume.utils")
       local lspconfig = require("lspconfig")
       local capabilities = require("cmp_nvim_lsp").default_capabilities()
+      local telescope_builtin = require("telescope.builtin")
 
       lspconfig.lua_ls.setup({ capabilities = capabilities })
       lspconfig.ansiblels.setup({ capabilities = capabilities })
@@ -31,9 +32,9 @@ return {
         callback = function(args)
           local keymaps = {
             ["textDocument/rename"] = { "n", "<leader>lr", vim.lsp.buf.rename },
-            ["textDocument/implementation"] = { "n", "gi", vim.lsp.buf.implementation },
-            ["textDocument/references"] = { "n", "gr", vim.lsp.buf.references },
-            ["textDocument/definition"] = { "n", "gd", vim.lsp.buf.definition },
+            ["textDocument/implementation"] = { "n", "gi", telescope_builtin.lsp_implementations },
+            ["textDocument/references"] = { "n", "gr", telescope_builtin.lsp_references },
+            ["textDocument/definition"] = { "n", "gd", telescope_builtin.lsp_definitions },
             ["textDocument/declaration"] = { "n", "gD", vim.lsp.buf.declaration },
             ["textDocument/codeAction"] = { "n", "<leader>ca", vim.lsp.buf.code_action },
             ["textDocument/formatting"] = {
