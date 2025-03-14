@@ -8,7 +8,7 @@ return {
       local builtin = require("telescope.builtin")
 
       local keymaps = {
-        { "n", "<leader>ft", ":Telescope<CR>" },
+        { "n", "<leader>fe", ":Telescope<CR>" },
         { "n", "<leader>ff", builtin.find_files },
         { "n", "<leader>fv", builtin.git_files },
         { "n", "<leader>fg", builtin.live_grep },
@@ -23,6 +23,7 @@ return {
             builtin.find_files({ hidden = true })
           end,
         },
+        { "n", "<leader>ft", ":Telescope telescope-tabs list_tabs<CR>" },
       }
 
       utils.set_keymaps(keymaps)
@@ -40,5 +41,13 @@ return {
       })
       require("telescope").load_extension("ui-select")
     end,
+  },
+  {
+    "LukasPietzschmann/telescope-tabs",
+    config = function()
+      require("telescope").load_extension("telescope-tabs")
+      require("telescope-tabs").setup()
+    end,
+    dependencies = { "nvim-telescope/telescope.nvim" },
   },
 }
