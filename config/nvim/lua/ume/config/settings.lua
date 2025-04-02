@@ -17,6 +17,8 @@ local options = {
   updatetime = 100,
   sessionoptions = "blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions",
   swapfile = false,
+  mouse = "",
+  mousescroll = "ver:0,hor:0",
 }
 
 for k, v in pairs(options) do
