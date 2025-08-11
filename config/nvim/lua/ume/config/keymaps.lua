@@ -1,4 +1,5 @@
 local utils = require("ume.utils")
+local snacks = require("snacks")
 
 local keymaps = {
   { "n", "<leader>q", ":wqall<CR>" },
@@ -12,17 +13,14 @@ local keymaps = {
     "n",
     "<leader>bd",
     function()
-      vim.cmd([[Neotree close]])
-      vim.cmd([[bdelete]])
+      snacks.bufdelete()
     end,
   },
   {
     "n",
     "<leader>bc",
     function()
-      vim.cmd([[%bd|e#]])
-      local no_name_buf = vim.fn.bufnr("$")
-      vim.api.nvim_buf_delete(no_name_buf, {})
+      snacks.bufdelete.all()
     end,
   },
   { "n", "[b", ":bprevious<CR>" },
