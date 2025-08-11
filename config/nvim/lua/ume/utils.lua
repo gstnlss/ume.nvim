@@ -15,7 +15,7 @@ M.set_lsp_keymaps = function(client_id, keymaps)
   local client = vim.lsp.get_client_by_id(client_id)
 
   for method, config in pairs(keymaps) do
-    if client.supports_method(method) then
+    if client:supports_method(method) then
       local modes = config[1]
       local keys = config[2]
       local action = config[3]

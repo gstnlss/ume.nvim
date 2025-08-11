@@ -9,7 +9,7 @@ return {
     "williamboman/mason-lspconfig.nvim",
     config = function()
       require("mason-lspconfig").setup({
-        ensure_installed = { "lua_ls", "ansiblels", "ts_ls", "bashls", "rust_analyzer" },
+        ensure_installed = { "lua_ls", "ansiblels", "bashls", "rust_analyzer" },
       })
     end,
   },
@@ -18,15 +18,14 @@ return {
     dependencies = { "hrsh7th/cmp-nvim-lsp", "nvim-telescope/telescope.nvim" },
     config = function()
       local utils = require("ume.utils")
-      local lspconfig = require("lspconfig")
-      local capabilities = require("cmp_nvim_lsp").default_capabilities()
       local telescope_builtin = require("telescope.builtin")
 
-      lspconfig.lua_ls.setup({ capabilities = capabilities })
-      lspconfig.ansiblels.setup({ capabilities = capabilities })
-      lspconfig.bashls.setup({ capabilities = capabilities, filetypes = { "sh", "bash", "zsh" } })
-      lspconfig.rust_analyzer.setup({ capabilities = capabilities })
-      lspconfig.ruby_lsp.setup({ capabilities = capabilities }) -- better to install manually because of version conflicts
+      vim.lsp.config("bashls", {
+        filetypes = { "sh", "bash", "zsh" },
+      })
+
+      vim.lsp.enable({ "lua_ls", "rust_analyzer", "bashls", "solargraph" })
+      vim.lsp.enable("ts_ls", false)
 
       vim.api.nvim_create_autocmd("LspAttach", {
         callback = function(args)
@@ -63,23 +62,35 @@ return {
       local null_ls = require("null-ls")
       local augroup = vim.api.nvim_create_augroup("LspFormatting", {})
 
+      local eslint_config = {
+        condition = function(utils)
+          return utils.root_has_file(
+            ".eslintrc",
+            ".eslintrc.js",
+            ".eslintrc.cjs",
+            ".eslintrc.yaml",
+            ".eslintrc.yml",
+            ".eslintrc.json",
+            "eslint.config.js"
+          )
+        end,
+      }
+
       null_ls.setup({
         sources = {
           null_ls.builtins.formatting.stylua,
           null_ls.builtins.formatting.prettierd.with({
             extra_filetypes = { "yaml.ansible" },
           }),
-          require("none-ls.formatting.eslint_d"),
+          require("none-ls.formatting.eslint_d").with(eslint_config),
           require("none-ls.formatting.rustfmt"),
           null_ls.builtins.formatting.rubocop,
           null_ls.builtins.formatting.opentofu_fmt,
-          null_ls.builtins.diagnostics.ansiblelint,
-          require("none-ls.diagnostics.eslint_d"),
-          null_ls.builtins.diagnostics.rubocop,
+          require("none-ls.diagnostics.eslint_d").with(eslint_config),
           null_ls.builtins.diagnostics.haml_lint,
         },
         on_attach = function(client, bufnr)
-          if client.supports_method("textDocument/formatting") then
+          if client:supports_method("textDocument/formatting", bufnr) then
             vim.api.nvim_clear_autocmds({ group = augroup, buffer = bufnr })
             vim.api.nvim_create_autocmd("BufWritePre", {
               group = augroup,

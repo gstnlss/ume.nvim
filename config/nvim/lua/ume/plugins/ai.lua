@@ -47,17 +47,14 @@ return {
 
       companion.setup({
         strategies = {
-          chat = { adapter = "qwen" },
-          inline = { adapter = "qwen" },
+          chat = { adapter = "ollama" },
+          inline = { adapter = "ollama" },
         },
         adapters = {
           opts = {
-            show_defaults = false,
+            show_defaults = true,
           },
-          qwen = ollama_adapter({ "qwen2.5-coder:14b", "qwen2.5-coder:7b" }),
-          llama = ollama_adapter("llama3.2:3b"),
-          codellama = ollama_adapter("codellama:13b"),
-          codegemma = ollama_adapter("codegemma:7b"),
+          qwen = ollama_adapter({ "qwen3:14b", "qwen3:8b", "qwen2.5-coder:14b", "qwen2.5-coder:7b" }),
         },
       })
 
