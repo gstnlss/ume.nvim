@@ -56,5 +56,30 @@ return {
       "saadparwaiz1/cmp_luasnip",
       "rafamadriz/friendly-snippets",
     },
+    config = function()
+      -- TODO: This might be a better option: https://github.com/hrsh7th/nvim-cmp/wiki/Example-mappings#luasnip
+      local ls = require("luasnip")
+      local utils = require("ume.utils")
+      local keymap_options = { silent = true }
+
+      utils.set_keymaps({
+        {
+          { "i", "s" },
+          "<Tab>",
+          function()
+            ls.jump(1)
+          end,
+          keymap_options,
+        },
+        {
+          { "i", "s" },
+          "<S-Tab>",
+          function()
+            ls.jump(-1)
+          end,
+          keymap_options,
+        },
+      })
+    end,
   },
 }
