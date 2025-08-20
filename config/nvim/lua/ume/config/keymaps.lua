@@ -20,7 +20,7 @@ local keymaps = {
     "n",
     "<leader>bc",
     function()
-      snacks.bufdelete.all()
+      snacks.bufdelete.other()
     end,
   },
   { "n", "[b", ":bprevious<CR>" },
