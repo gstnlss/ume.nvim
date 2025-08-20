@@ -24,6 +24,16 @@ return {
         filetypes = { "sh", "bash", "zsh" },
       })
 
+      vim.lsp.config("lua_ls", {
+        settings = {
+          Lua = {
+            diagnostics = {
+              globals = { "vim" },
+            },
+          },
+        },
+      })
+
       vim.lsp.enable({ "lua_ls", "rust_analyzer", "bashls", "solargraph", "ts_ls" })
 
       vim.api.nvim_create_autocmd("LspAttach", {

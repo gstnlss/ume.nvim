@@ -7,12 +7,15 @@ return {
       cmd = "haml-lint",
       stdin = false,
       append_fname = true,
-      parser = require("lint.parser").from_pattern("^.+:(%d+) %[([EWF])%] ([^:]+): (.+)$",
-        { "lnum", "severity", "code", "message" }, {
+      parser = require("lint.parser").from_pattern(
+        "^.+:(%d+) %[([EWF])%] ([^:]+): (.+)$",
+        { "lnum", "severity", "code", "message" },
+        {
           ["E"] = vim.diagnostic.severity.ERROR,
           ["W"] = vim.diagnostic.severity.WARN,
         },
-        { source = "haml-lint" })
+        { source = "haml-lint" }
+      ),
     }
 
     lint.linters.haml_lint = haml_lint_config
@@ -20,9 +23,13 @@ return {
       lua = { "luacheck" },
       ruby = { "ruby" },
       haml = { "haml_lint" },
-      javascript = { "eslint_d" }
+      javascript = { "eslint_d" },
     }
 
-    vim.api.nvim_create_autocmd({ "BufWinEnter", "BufWritePost" }, { callback = function() lint.try_lint() end })
-  end
+    vim.api.nvim_create_autocmd({ "BufWinEnter", "BufWritePost" }, {
+      callback = function()
+        lint.try_lint()
+      end,
+    })
+  end,
 }

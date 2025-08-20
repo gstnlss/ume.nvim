@@ -9,6 +9,7 @@ return {
       lua = { "stylua" },
       ruby = { "rubocop" },
       javascript = { "prettierd" },
+      json = { "prettierd" },
     },
   },
 }
