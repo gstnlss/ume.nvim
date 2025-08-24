@@ -23,4 +23,4 @@ bindkey -v
 bindkey -s ^P "tmux-sessionizer\n"
 bindkey -s ^O "tmux-sessionizer $HOME\n"
 
-export PATH="${HOME}/.local/bin:${PATH}"
+eval "$(rbenv init - --no-rehash zsh)"
