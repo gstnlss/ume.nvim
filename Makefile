@@ -13,3 +13,6 @@ restow:
 
 delete:
 	stow --target $(target) --verbose --delete $(package)
+
+lint:
+	luacheck .

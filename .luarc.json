@@ -3,7 +3,8 @@
     "version": "LuaJIT"
   },
   "diagnostics": {
-    "libraryFiles": false
+    "libraryFiles": false,
+    "disable": ["lowercase-global"]
   },
   "workspace": {
     "checkThirdParty": false,
