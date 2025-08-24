@@ -79,6 +79,7 @@ return {
       "saadparwaiz1/cmp_luasnip",
       "rafamadriz/friendly-snippets",
     },
-    config = true,
+    version = "v2.*",
+    build = "make install_jsregexp",
   },
 }
