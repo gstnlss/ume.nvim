@@ -1,5 +1,15 @@
-vim.g.mapleader = " "
-vim.g.maplocalleader = "\\"
+local global_editor_options = {
+  mapleader = " ",
+  maplocalleader = "\\",
+  loaded_python3_provider = 0,
+  loaded_ruby_provider = 0,
+  loaded_perl_provider = 0,
+  loaded_node_provider = 0,
+}
+
+for k, v in pairs(global_editor_options) do
+  vim.g[k] = v
+end
 
 local options = {
   tabstop = 2,
