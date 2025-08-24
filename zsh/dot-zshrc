@@ -23,4 +23,8 @@ bindkey -v
 bindkey -s ^P "tmux-sessionizer\n"
 bindkey -s ^O "tmux-sessionizer $HOME\n"
 
+export MISE_NODE_DEFAULT_PACKAGES_FILE="$HOME/.config/mise/default-npm-packages"
+export MISE_RUBY_DEFAULT_PACKAGES_FILE="$HOME/.config/mise/default-gems"
+export MISE_PYTHON_DEFAULT_PACKAGES_FILE="$HOME/.config/mise/default-python-packages"
+
 eval "$(mise activate zsh)"

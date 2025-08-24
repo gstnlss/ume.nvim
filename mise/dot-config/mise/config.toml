@@ -1,6 +1,8 @@
 [tools]
-node = "22"
-ruby = "3"
+node = "latest"
+ruby = "latest"
+rust = "latest"
+python = "latest"
 
 [settings]
-idiomatic_version_file_enable_tools = ["ruby", "node"]
+idiomatic_version_file_enable_tools = ["ruby", "node", "python"]
