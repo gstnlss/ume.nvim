@@ -1,0 +1,22 @@
+#!/usr/bin/env zsh
+
+export EDITOR=nvim
+export BROWSER=firefox
+
+export ZSH="$HOME/.local/share/oh-my-zsh"
+
+if [ ! -d "$ZSH" ]; then 
+  CHSH=no RUNZSH=no KEEP_ZSHRC=yes sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+fi
+
+ZSH_THEME="robbyrussell"
+DISABLE_UPDATE_PROMPT="true"
+ENABLE_CORRECTION="false"
+COMPLETION_WAITING_DOTS="true"
+plugins=(git nvm docker docker-compose)
+source "$ZSH/oh-my-zsh.sh"
+
+alias vi=nvim
+alias vim=nvim
+
+bindkey -v
