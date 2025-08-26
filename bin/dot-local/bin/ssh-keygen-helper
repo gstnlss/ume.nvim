@@ -1,0 +1,76 @@
+#!/usr/bin/env bash
+
+set -e
+
+DEFAULT_EMAIL="agustinlessa@pm.me"
+email="$DEFAULT_EMAIL"
+
+usage() {
+    echo "Usage: $0 [-e email] <key_name>"
+    echo ""
+    echo "Generate SSH key pair with specified name"
+    echo ""
+    echo "Arguments:"
+    echo "  key_name    Name for the SSH key pair"
+    echo ""
+    echo "Options:"
+    echo "  -e email    Email to use for the key (default: $DEFAULT_EMAIL)"
+    echo "  -h          Show this help message"
+    exit 1
+}
+
+while getopts "e:h" opt; do
+    case $opt in
+        e)
+            email="$OPTARG"
+            ;;
+        h)
+            usage
+            ;;
+        \?)
+            echo "Invalid option: -$OPTARG" >&2
+            usage
+            ;;
+    esac
+done
+
+shift $((OPTIND-1))
+
+if [ $# -ne 1 ]; then
+    echo "Error: Key name is required" >&2
+    usage
+fi
+
+key_name="$1"
+
+if [ -z "$key_name" ]; then
+    echo "Error: Key name cannot be empty" >&2
+    usage
+fi
+
+ssh_dir="$HOME/.ssh"
+private_key="$ssh_dir/$key_name"
+public_key="$ssh_dir/${key_name}.pub"
+
+mkdir -p "$ssh_dir"
+
+if [ -f "$private_key" ] || [ -f "$public_key" ]; then
+    echo "Error: Key with name '$key_name' already exists" >&2
+    exit 1
+fi
+
+echo "Generating SSH key pair: $key_name"
+echo "Email: $email"
+echo "Private key: $private_key"
+echo "Public key: $public_key"
+echo ""
+
+ssh-keygen -t ed25519 -C "$email" -f "$private_key" -N ""
+
+echo ""
+echo "SSH key pair generated successfully!"
+echo "Private key: $private_key"
+echo "Public key: $public_key"
+echo ""
+echo "To add this key to your SSH agent, run:"
+echo "  ssh-add $private_key"
