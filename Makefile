@@ -2,7 +2,6 @@ target = $(HOME)/.config
 package = config
 
 stow:
-	[ ! -d "$(target)" ] && mkdir $(target)
 	stow --target $(target) --verbose $(package)
 
 dry-run:
