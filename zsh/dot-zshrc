@@ -31,4 +31,5 @@ export MISE_PYTHON_DEFAULT_PACKAGES_FILE="$HOME/.config/mise/default-python-pack
 
 eval "$(mise activate zsh)"
 
-export PATH="$HOME/.local/bin:$PATH"
+# TODO: Implement a function to add folders to path and make it more clear what's been added at first glance
+export PATH="$HOME/.local/bin:/opt/homebrew/bin:$PATH"
