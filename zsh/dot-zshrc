@@ -16,6 +16,8 @@ COMPLETION_WAITING_DOTS="true"
 plugins=(git nvm docker docker-compose)
 source "$ZSH/oh-my-zsh.sh"
 
+[[ -n "$SSH_CONNECTION" ]] && PROMPT="%{$fg_bold[red]%}[%m] $PROMPT"
+
 alias vi=nvim
 alias vim=nvim
 
