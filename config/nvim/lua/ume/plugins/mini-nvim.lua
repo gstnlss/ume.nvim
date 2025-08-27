@@ -61,18 +61,27 @@ local MiniConfig = {
     })
   end,
   sessions = function()
-    require("mini.sessions").setup({
-      autoread = true,
-      autowrite = true,
-    })
+    require("mini.sessions").setup()
     vim.keymap.set("n", "<leader>ss", function()
       MiniSessions.select()
     end, { desc = "Select session" })
+
     vim.keymap.set("n", "<leader>sn", function()
       local cwd = vim.fn.getcwd()
       local root_dir = vim.fn.fnamemodify(cwd, ":t")
       MiniSessions.write(root_dir)
     end, { desc = "Create session" })
+
+    vim.api.nvim_create_autocmd("VimEnter", {
+      callback = function()
+        local cwd = vim.fn.getcwd()
+        local root_dir = vim.fn.fnamemodify(cwd, ":t")
+
+        if MiniSessions.detected[root_dir] ~= nil then
+          MiniSessions.read(root_dir)
+        end
+      end,
+    })
   end,
   indentscope = function()
     local indentscope = require("mini.indentscope")
