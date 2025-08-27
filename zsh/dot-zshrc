@@ -32,4 +32,14 @@ export MISE_PYTHON_DEFAULT_PACKAGES_FILE="$HOME/.config/mise/default-python-pack
 eval "$(mise activate zsh)"
 
 # TODO: Implement a function to add folders to path and make it more clear what's been added at first glance
-export PATH="$HOME/.local/bin:/opt/homebrew/bin:$PATH"
+# export PATH="$HOME/.local/bin:/opt/homebrew/bin:$PATH"
+export PATH="$HOME/.local/bin:$HOME/.luarocks/bin:$PATH"
+
+OS="$(uname)"
+if [[ "$OS" == "Linux" ]]; then
+  eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+elif [[ "$OS" == "Darwin" ]]; then
+  export PATH="$HOME/.local/bin:/opt/homebrew/bin:$PATH"
+else
+  echo "System without homebrew support"
+fi
