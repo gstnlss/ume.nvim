@@ -15,6 +15,8 @@ return {
       typescript = js_formatters,
       typescriptreact = js_formatters,
       json = { "prettierd" },
+      sh = { "shellharden" },
+      bash = { "shellharden" },
     },
   },
 }

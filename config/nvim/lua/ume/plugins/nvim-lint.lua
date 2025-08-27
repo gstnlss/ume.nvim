@@ -21,9 +21,10 @@ return {
     lint.linters.haml_lint = haml_lint_config
     lint.linters_by_ft = {
       lua = { "luacheck" },
-      ruby = { "ruby" },
+      ruby = { "ruby", "rubocop" },
       haml = { "haml_lint" },
-      javascript = { "eslint_d" },
+      sh = { "shellcheck" },
+      bash = { "shellcheck" },
     }
 
     vim.api.nvim_create_autocmd({ "BufWinEnter", "BufWritePost" }, {

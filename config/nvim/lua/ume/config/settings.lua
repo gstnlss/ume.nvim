@@ -30,6 +30,10 @@ local options = {
   mouse = "",
   mousescroll = "ver:0,hor:0",
   undofile = true,
+  clipboard = "unnamedplus",
+  ignorecase = true,
+  smartcase = true,
+  smartindent = true,
 }
 
 for k, v in pairs(options) do

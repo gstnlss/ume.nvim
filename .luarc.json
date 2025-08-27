@@ -1,10 +1,12 @@
 {
+  "$schema": "https://raw.githubusercontent.com/sumneko/vscode-lua/master/setting/schema.json",
   "runtime": {
     "version": "LuaJIT"
   },
   "diagnostics": {
-    "libraryFiles": false,
-    "disable": ["lowercase-global"]
+    "libraryFiles": "Disable",
+    "disable": ["lowercase-global"],
+    "globals": ["MiniFiles", "MiniSnippets", "MiniSessions"]
   },
   "workspace": {
     "checkThirdParty": false,
