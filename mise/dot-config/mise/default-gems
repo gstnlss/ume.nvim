@@ -1,3 +1,4 @@
 rubocop
-solargraph
-solargraph-rails
+rubocop-rspec
+solargraph ~> 0.56
+solargraph-rails ~> 1.1
