@@ -34,6 +34,8 @@ local options = {
   ignorecase = true,
   smartcase = true,
   smartindent = true,
+  foldmethod = "indent",
+  foldlevelstart = 99,
 }
 
 for k, v in pairs(options) do
