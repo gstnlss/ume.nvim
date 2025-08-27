@@ -49,7 +49,7 @@ local minipick = function()
   vim.keymap.set("n", "<leader>fc", ":Pick colorschemes<CR>", { desc = "Pick colorscheme" })
   vim.api.nvim_create_autocmd("LspAttach", {
     callback = function()
-      vim.keymap.sjt("n", "gra", vim.lsp.buf.code_action, { desc = "LSP code actions" })
+      vim.keymap.set("n", "gra", vim.lsp.buf.code_action, { desc = "LSP code actions" })
       vim.keymap.set("n", "gri", ":Pick lsp scope='implementation'<CR>", { desc = "LSP implementation" })
       vim.keymap.set("n", "grn", vim.lsp.buf.rename, { desc = "LSP rename" })
       vim.keymap.set("n", "grr", ":Pick lsp scope='references'<CR>", { desc = "LSP references" })
