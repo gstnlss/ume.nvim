@@ -6,7 +6,13 @@
   "diagnostics": {
     "libraryFiles": "Disable",
     "disable": ["lowercase-global"],
-    "globals": ["MiniFiles", "MiniSnippets", "MiniSessions"]
+    "globals": [
+      "MiniFiles",
+      "MiniSnippets",
+      "MiniSessions",
+      "MiniBufremove",
+      "MiniPick"
+    ]
   },
   "workspace": {
     "checkThirdParty": false,

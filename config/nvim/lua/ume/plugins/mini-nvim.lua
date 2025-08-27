@@ -36,7 +36,10 @@ local MiniConfig = {
   end,
   files = function()
     require("mini.files").setup()
-    vim.keymap.set("n", "<leader>ee", MiniFiles.open)
+    vim.keymap.set("n", "<leader>er", MiniFiles.open, { desc = "File explorer (root)" })
+    vim.keymap.set("n", "<leader>ee", function()
+      MiniFiles.open(vim.api.nvim_buf_get_name(0))
+    end, { desc = "File explorer (current)" })
   end,
   pick = function()
     require("mini.pick").setup()
@@ -137,6 +140,18 @@ local MiniConfig = {
       },
     })
   end,
+  bufremove = function()
+    require("mini.bufremove").setup()
+    vim.keymap.set("n", "<leader>bd", MiniBufremove.delete, { desc = "Delete current buffer" })
+    vim.keymap.set("n", "<leader>bc", function()
+      for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do
+        if vim.api.nvim_buf_is_valid(bufnr) and vim.api.nvim_buf_is_loaded(bufnr) then
+          vim.cmd.bdelete(bufnr)
+        end
+      end
+      MiniPick.builtin.files()
+    end, { desc = "Cleanup buffers" })
+  end,
 }
 
 return {
@@ -157,5 +172,6 @@ return {
     MiniConfig.sessions()
     MiniConfig.indentscope()
     MiniConfig.clue()
+    MiniConfig.bufremove()
   end,
 }
