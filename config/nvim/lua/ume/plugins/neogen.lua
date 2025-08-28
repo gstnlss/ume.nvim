@@ -5,7 +5,7 @@ return {
     local utils = require("ume.utils")
     local keymap_options = { noremap = true, silent = true }
 
-    neogen.setup({ snippet_engine = "luasnip" })
+    neogen.setup({ snippet_engine = "mini" })
 
     utils.set_keymaps({
       { "n", "<Leader>dg", neogen.generate, keymap_options },
