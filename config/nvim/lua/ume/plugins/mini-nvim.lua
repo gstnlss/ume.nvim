@@ -3,7 +3,6 @@ local plugin_definition = {
   "echasnovski/mini.nvim",
   version = false,
   config = function()
-    vim.cmd.colorscheme("miniautumn")
     require("mini.completion").setup()
     require("mini.icons").setup()
     require("mini.pairs").setup()
