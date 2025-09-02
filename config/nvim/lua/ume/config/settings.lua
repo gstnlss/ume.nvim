@@ -36,6 +36,7 @@ local options = {
   smartindent = true,
   foldmethod = "indent",
   foldlevelstart = 99,
+  completeopt = "menuone,noselect,fuzzy",
 }
 
 for k, v in pairs(options) do

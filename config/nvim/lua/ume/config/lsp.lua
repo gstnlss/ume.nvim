@@ -2,10 +2,11 @@ vim.lsp.enable({
   "lua_ls",
   "ts_ls",
   "bashls",
-  "solargraph",
+  "ruby_lsp",
   "rust_analyzer",
   "jsonls",
   "html",
   "cssls",
   "eslint",
+  "tailwindcss",
 })

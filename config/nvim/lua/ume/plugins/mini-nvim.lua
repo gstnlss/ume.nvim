@@ -3,12 +3,12 @@ local plugin_definition = {
   "echasnovski/mini.nvim",
   version = false,
   config = function()
-    require("mini.completion").setup()
     require("mini.icons").setup()
     require("mini.pairs").setup()
     require("mini.statusline").setup()
     require("mini.notify").setup()
     require("mini.move").setup()
+    require("mini.completion").setup()
 
     MiniConfig.files()
     MiniConfig.snippets()
