@@ -1,3 +1,7 @@
 Host github.com
   AddKeysToAgent yes
   IdentityFile ~/.ssh/github
+
+Host ume-* umelab-*
+  AddKeysToAgent yes
+  IdentityFile ~/.ssh/homelab
