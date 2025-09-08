@@ -89,6 +89,7 @@ end
 
 MiniConfig.sessions = function()
   require("mini.sessions").setup()
+
   vim.keymap.set("n", "<leader>ss", function()
     MiniSessions.select()
   end, { desc = "Select session" })
@@ -104,7 +105,7 @@ MiniConfig.sessions = function()
       local cwd = vim.fn.getcwd()
       local root_dir = vim.fn.fnamemodify(cwd, ":t")
 
-      if MiniSessions.detected[root_dir] ~= nil then
+      if MiniSessions.detected[root_dir] ~= nil and vim.fn.argc() == 0 then
         MiniSessions.read(root_dir)
       end
     end,
