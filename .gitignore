@@ -1,2 +1,3 @@
 bin/dot-local/share
 bin/dot-local/state
+.last_pulled_time
