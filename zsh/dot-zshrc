@@ -25,8 +25,9 @@ for repo in "${DOT_DIRS[@]}"; do
   fi
 done
 
-export EDITOR=nvim
-export BROWSER=firefox
+export LANG="en_US.UTF-8"
+export EDITOR="nvim"
+export BROWSER="firefox"
 
 export ZSH="$HOME/.local/share/oh-my-zsh"
 
