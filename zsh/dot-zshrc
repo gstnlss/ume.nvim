@@ -10,7 +10,7 @@ for repo in "${DOT_DIRS[@]}"; do
     flag_file="$repo/.last_pulled_time"
 
     if [ ! -f "$flag_file" ]; then
-      (cd "$repo" && git pull)
+      (cd "$repo" && git pull 2>&1 > /dev/null)
       date +%s > "$flag_file"
     else
       last_pull=$(cat "$flag_file")
@@ -18,7 +18,7 @@ for repo in "${DOT_DIRS[@]}"; do
       elapsed=$(( now - last_pull ))
 
       if (( elapsed > 86400 )); then
-        (cd "$repo" && git pull)
+        (cd "$repo" && git pull 2>&1 > /dev/null)
         date +%s > "$flag_file"
       fi
     fi
