@@ -173,9 +173,7 @@ MiniConfig.bufremove = function()
   vim.keymap.set("n", "<leader>bd", MiniBufremove.delete, { desc = "Delete current buffer" })
   vim.keymap.set("n", "<leader>bc", function()
     for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do
-      if vim.api.nvim_buf_is_valid(bufnr) and vim.api.nvim_buf_is_loaded(bufnr) then
-        vim.cmd.bdelete(bufnr)
-      end
+      MiniBufremove.delete(bufnr)
     end
     MiniPick.builtin.files()
   end, { desc = "Cleanup buffers" })
