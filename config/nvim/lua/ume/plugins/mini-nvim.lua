@@ -206,6 +206,49 @@ MiniConfig.pick = function()
           vim.tbl_extend("force", opts, { desc = "LSP definition (unsupported)" })
         )
       end
+
+      if client:supports_method("textDocument/hover") then
+        vim.keymap.set("n", "K", vim.lsp.buf.hover, vim.tbl_extend("force", opts, { desc = "LSP hover" }))
+      else
+        vim.keymap.set(
+          "n",
+          "K",
+          unsupported_notify("hover"),
+          vim.tbl_extend("force", opts, { desc = "LSP hover (unsupported)" })
+        )
+      end
+
+      if client:supports_method("textDocument/documentSymbol") then
+        vim.keymap.set(
+          "n",
+          "<leader>fs",
+          ":Pick lsp scope='document_symbol'<CR>",
+          vim.tbl_extend("force", opts, { desc = "LSP document symbols" })
+        )
+      else
+        vim.keymap.set(
+          "n",
+          "<leader>fs",
+          unsupported_notify("document symbols"),
+          vim.tbl_extend("force", opts, { desc = "LSP document symbols (unsupported)" })
+        )
+      end
+
+      if client:supports_method("workspace/symbol") then
+        vim.keymap.set(
+          "n",
+          "<leader>fS",
+          ":Pick lsp scope='workspace_symbol'<CR>",
+          vim.tbl_extend("force", opts, { desc = "LSP workspace symbols" })
+        )
+      else
+        vim.keymap.set(
+          "n",
+          "<leader>fS",
+          unsupported_notify("workspace symbols"),
+          vim.tbl_extend("force", opts, { desc = "LSP workspace symbols (unsupported)" })
+        )
+      end
     end,
   })
 end
