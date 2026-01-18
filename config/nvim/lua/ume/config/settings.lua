@@ -37,7 +37,8 @@ local options = {
   ignorecase = true,
   smartcase = true,
   smartindent = true,
-  foldmethod = "indent",
+  foldmethod = "expr",
+  foldexpr = "v:lua.vim.treesitter.foldexpr()",
   foldlevelstart = 99,
   completeopt = "menuone,noselect,fuzzy",
 }
