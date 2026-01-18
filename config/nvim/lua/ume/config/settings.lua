@@ -1,6 +1,9 @@
 local global_editor_options = {
   mapleader = " ",
   maplocalleader = "\\",
+  -- Disable unused language providers for faster startup
+  -- Note: LSP servers and external tools (rubocop, formatters, linters) run independently
+  -- and do NOT require these providers. Providers are only needed for legacy remote plugins.
   loaded_python3_provider = 0,
   loaded_ruby_provider = 0,
   loaded_perl_provider = 0,
