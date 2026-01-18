@@ -4,8 +4,9 @@ return {
   "stevearc/conform.nvim",
   opts = {
     format_on_save = {
-      timeout_ms = 1000,
+      timeout_ms = 3000, -- 3 seconds is more reasonable for large files
       lsp_format = "fallback",
+      quiet = false, -- Show error messages if timeout occurs
     },
     formatters_by_ft = {
       lua = { "stylua" },

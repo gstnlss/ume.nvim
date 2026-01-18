@@ -27,9 +27,16 @@ return {
       bash = { "shellcheck" },
     }
 
+    local lint_augroup = vim.api.nvim_create_augroup("ume_lint", { clear = true })
+
     vim.api.nvim_create_autocmd({ "BufWinEnter", "BufWritePost" }, {
+      group = lint_augroup,
       callback = function()
-        lint.try_lint()
+        -- Only lint if a linter is available for this filetype
+        local linters = lint.linters_by_ft[vim.bo.filetype]
+        if linters and #linters > 0 then
+          lint.try_lint()
+        end
       end,
     })
   end,

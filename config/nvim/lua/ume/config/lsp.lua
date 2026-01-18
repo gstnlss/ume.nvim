@@ -16,5 +16,5 @@ vim.lsp.enable({
   "eslint",
   "tailwindcss",
   "clangd",
-  "perlls",
+  "perlnavigator",
 })
