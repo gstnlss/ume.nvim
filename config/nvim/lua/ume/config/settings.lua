@@ -40,7 +40,7 @@ local options = {
   foldmethod = "expr",
   foldexpr = "v:lua.vim.treesitter.foldexpr()",
   foldlevelstart = 99,
-  completeopt = "menuone,noselect,fuzzy",
+  completeopt = vim.fn.has("nvim-0.11") == 1 and "menuone,noselect,fuzzy" or "menuone,noselect",
 }
 
 for k, v in pairs(options) do
