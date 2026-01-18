@@ -76,6 +76,46 @@ MiniConfig.snippets = function()
   vim.keymap.set("i", "<S-Tab>", jump_prev)
 end
 
+-- Smart LSP navigation: jump directly for single result, picker for multiple
+local function smart_lsp_nav(method, picker_scope)
+  local win = vim.api.nvim_get_current_win()
+  local bufnr = vim.api.nvim_get_current_buf()
+  local params = vim.lsp.util.make_position_params(win, "utf-8")
+
+  vim.lsp.buf_request_all(bufnr, method, params, function(results)
+    -- Collect all valid locations from all LSP clients
+    local locations = {}
+
+    for _, result in pairs(results) do
+      if result.result then
+        local lsp_result = result.result
+
+        -- Handle both single location and array of locations
+        if lsp_result.uri or lsp_result.targetUri then
+          -- Single location (e.g., from textDocument/definition)
+          table.insert(locations, lsp_result)
+        elseif vim.islist(lsp_result) then
+          -- Array of locations (e.g., from textDocument/references)
+          vim.list_extend(locations, lsp_result)
+        end
+      end
+    end
+
+    -- Handle results based on count
+    if #locations == 0 then
+      vim.notify("No " .. picker_scope .. " found", vim.log.levels.INFO)
+    elseif #locations == 1 then
+      -- Single result: jump directly
+      vim.lsp.util.show_document(locations[1], "utf-8")
+    else
+      -- Multiple results: open picker
+      vim.schedule(function()
+        vim.cmd("Pick lsp scope='" .. picker_scope .. "'")
+      end)
+    end
+  end)
+end
+
 MiniConfig.pick = function()
   require("mini.pick").setup()
   vim.keymap.set("n", "<leader>ff", ":Pick files<CR>", { desc = "Find files" })
@@ -133,12 +173,9 @@ MiniConfig.pick = function()
       end
 
       if client:supports_method("textDocument/implementation") then
-        vim.keymap.set(
-          "n",
-          "gri",
-          ":Pick lsp scope='implementation'<CR>",
-          vim.tbl_extend("force", opts, { desc = "LSP implementation" })
-        )
+        vim.keymap.set("n", "gri", function()
+          smart_lsp_nav("textDocument/implementation", "implementation")
+        end, vim.tbl_extend("force", opts, { desc = "LSP implementation" }))
       else
         vim.keymap.set(
           "n",
@@ -160,12 +197,9 @@ MiniConfig.pick = function()
       end
 
       if client:supports_method("textDocument/references") then
-        vim.keymap.set(
-          "n",
-          "grr",
-          ":Pick lsp scope='references'<CR>",
-          vim.tbl_extend("force", opts, { desc = "LSP references" })
-        )
+        vim.keymap.set("n", "grr", function()
+          smart_lsp_nav("textDocument/references", "references")
+        end, vim.tbl_extend("force", opts, { desc = "LSP references" }))
       else
         vim.keymap.set(
           "n",
@@ -176,12 +210,9 @@ MiniConfig.pick = function()
       end
 
       if client:supports_method("textDocument/typeDefinition") then
-        vim.keymap.set(
-          "n",
-          "grt",
-          ":Pick lsp scope='type_definition'<CR>",
-          vim.tbl_extend("force", opts, { desc = "LSP type definition" })
-        )
+        vim.keymap.set("n", "grt", function()
+          smart_lsp_nav("textDocument/typeDefinition", "type_definition")
+        end, vim.tbl_extend("force", opts, { desc = "LSP type definition" }))
       else
         vim.keymap.set(
           "n",
@@ -192,12 +223,9 @@ MiniConfig.pick = function()
       end
 
       if client:supports_method("textDocument/definition") then
-        vim.keymap.set(
-          "n",
-          "gd",
-          ":Pick lsp scope='definition'<CR>",
-          vim.tbl_extend("force", opts, { desc = "LSP definition" })
-        )
+        vim.keymap.set("n", "gd", function()
+          smart_lsp_nav("textDocument/definition", "definition")
+        end, vim.tbl_extend("force", opts, { desc = "LSP definition" }))
       else
         vim.keymap.set(
           "n",
