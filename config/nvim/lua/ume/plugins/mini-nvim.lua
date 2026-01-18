@@ -21,10 +21,11 @@ local plugin_definition = {
 }
 
 MiniConfig.files = function()
-  require("mini.files").setup()
-  vim.keymap.set("n", "<leader>er", MiniFiles.open, { desc = "File explorer (root)" })
+  local minifiles = require("mini.files")
+  minifiles.setup()
+  vim.keymap.set("n", "<leader>er", minifiles.open, { desc = "File explorer (root)" })
   vim.keymap.set("n", "<leader>ee", function()
-    MiniFiles.open(vim.api.nvim_buf_get_name(0))
+    minifiles.open(vim.api.nvim_buf_get_name(0))
   end, { desc = "File explorer (current)" })
 end
 
@@ -34,31 +35,42 @@ MiniConfig.snippets = function()
   local match_strict = function(snips)
     return snippets.default_match(snips, { pattern_fuzzy = "%S+" })
   end
+
+  -- Build loaders list, optionally including custom global snippets
+  local loaders = {}
+
+  -- Only load custom snippets if the file exists
+  local custom_snippet_path = vim.fn.stdpath("config") .. "/snippets/global.json"
+  if vim.fn.filereadable(custom_snippet_path) == 1 then
+    table.insert(loaders, gen_loader.from_file(custom_snippet_path))
+  end
+
+  -- Always load language-specific snippets
+  table.insert(loaders, gen_loader.from_lang())
+
   snippets.setup({
-    snippets = {
-      gen_loader.from_file("~/.config/nvim/snippets/global.json"),
-      gen_loader.from_lang(),
-    },
+    snippets = loaders,
     mappings = { expand = "", jump_next = "", jump_prev = "" },
     expand = { match = match_strict },
   })
 
   -- Super tab setup
+  local minisnippets = require("mini.snippets")
   local expand_or_jump = function()
-    local can_expand = #MiniSnippets.expand({ insert = false }) > 0
+    local can_expand = #minisnippets.expand({ insert = false }) > 0
     if can_expand then
-      vim.schedule(MiniSnippets.expand)
+      vim.schedule(minisnippets.expand)
       return ""
     end
-    local is_active = MiniSnippets.session.get() ~= nil
+    local is_active = minisnippets.session.get() ~= nil
     if is_active then
-      MiniSnippets.session.jump("next")
+      minisnippets.session.jump("next")
       return ""
     end
     return "\t"
   end
   local jump_prev = function()
-    MiniSnippets.session.jump("prev")
+    minisnippets.session.jump("prev")
   end
   vim.keymap.set("i", "<Tab>", expand_or_jump, { expr = true })
   vim.keymap.set("i", "<S-Tab>", jump_prev)
@@ -75,29 +87,141 @@ MiniConfig.pick = function()
 
   require("mini.extra").setup()
   vim.keymap.set("n", "<leader>fc", ":Pick colorschemes<CR>", { desc = "Pick colorscheme" })
+
+  -- Set up LSP keymaps on attach with proper buffer-local scope and capability checks
+  local lsp_augroup = vim.api.nvim_create_augroup("ume_lsp_attach", { clear = true })
+
   vim.api.nvim_create_autocmd("LspAttach", {
-    callback = function()
-      vim.keymap.set("n", "gra", vim.lsp.buf.code_action, { desc = "LSP code actions" })
-      vim.keymap.set("n", "gri", ":Pick lsp scope='implementation'<CR>", { desc = "LSP implementation" })
-      vim.keymap.set("n", "grn", vim.lsp.buf.rename, { desc = "LSP rename" })
-      vim.keymap.set("n", "grr", ":Pick lsp scope='references'<CR>", { desc = "LSP references" })
-      vim.keymap.set("n", "grt", ":Pick lsp scope='type_definition'<CR>", { desc = "LSP type definition" })
-      vim.keymap.set("n", "gd", ":Pick lsp scope='definition'<CR>", { desc = "LSP definition" })
+    group = lsp_augroup,
+    callback = function(args)
+      local bufnr = args.buf
+      local client = vim.lsp.get_client_by_id(args.data.client_id)
+
+      if not client then
+        return
+      end
+
+      -- Buffer-local keymap options
+      local opts = { buffer = bufnr }
+
+      -- Helper to create a fallback that notifies when method isn't supported
+      local client_name = client.name
+      local function unsupported_notify(method_name)
+        return function()
+          vim.notify(
+            string.format("LSP server '%s' does not support %s", client_name, method_name),
+            vim.log.levels.WARN
+          )
+        end
+      end
+
+      -- Set keymaps if supported, otherwise set fallback with notification
+      if client:supports_method("textDocument/codeAction") then
+        vim.keymap.set(
+          "n",
+          "gra",
+          vim.lsp.buf.code_action,
+          vim.tbl_extend("force", opts, { desc = "LSP code actions" })
+        )
+      else
+        vim.keymap.set(
+          "n",
+          "gra",
+          unsupported_notify("code actions"),
+          vim.tbl_extend("force", opts, { desc = "LSP code actions (unsupported)" })
+        )
+      end
+
+      if client:supports_method("textDocument/implementation") then
+        vim.keymap.set(
+          "n",
+          "gri",
+          ":Pick lsp scope='implementation'<CR>",
+          vim.tbl_extend("force", opts, { desc = "LSP implementation" })
+        )
+      else
+        vim.keymap.set(
+          "n",
+          "gri",
+          unsupported_notify("implementation"),
+          vim.tbl_extend("force", opts, { desc = "LSP implementation (unsupported)" })
+        )
+      end
+
+      if client:supports_method("textDocument/rename") then
+        vim.keymap.set("n", "grn", vim.lsp.buf.rename, vim.tbl_extend("force", opts, { desc = "LSP rename" }))
+      else
+        vim.keymap.set(
+          "n",
+          "grn",
+          unsupported_notify("rename"),
+          vim.tbl_extend("force", opts, { desc = "LSP rename (unsupported)" })
+        )
+      end
+
+      if client:supports_method("textDocument/references") then
+        vim.keymap.set(
+          "n",
+          "grr",
+          ":Pick lsp scope='references'<CR>",
+          vim.tbl_extend("force", opts, { desc = "LSP references" })
+        )
+      else
+        vim.keymap.set(
+          "n",
+          "grr",
+          unsupported_notify("references"),
+          vim.tbl_extend("force", opts, { desc = "LSP references (unsupported)" })
+        )
+      end
+
+      if client:supports_method("textDocument/typeDefinition") then
+        vim.keymap.set(
+          "n",
+          "grt",
+          ":Pick lsp scope='type_definition'<CR>",
+          vim.tbl_extend("force", opts, { desc = "LSP type definition" })
+        )
+      else
+        vim.keymap.set(
+          "n",
+          "grt",
+          unsupported_notify("type definition"),
+          vim.tbl_extend("force", opts, { desc = "LSP type definition (unsupported)" })
+        )
+      end
+
+      if client:supports_method("textDocument/definition") then
+        vim.keymap.set(
+          "n",
+          "gd",
+          ":Pick lsp scope='definition'<CR>",
+          vim.tbl_extend("force", opts, { desc = "LSP definition" })
+        )
+      else
+        vim.keymap.set(
+          "n",
+          "gd",
+          unsupported_notify("definition"),
+          vim.tbl_extend("force", opts, { desc = "LSP definition (unsupported)" })
+        )
+      end
     end,
   })
 end
 
 MiniConfig.sessions = function()
-  require("mini.sessions").setup()
+  local minisessions = require("mini.sessions")
+  minisessions.setup()
 
   vim.keymap.set("n", "<leader>ss", function()
-    MiniSessions.select()
+    minisessions.select()
   end, { desc = "Select session" })
 
   vim.keymap.set("n", "<leader>sn", function()
     local cwd = vim.fn.getcwd()
     local root_dir = vim.fn.fnamemodify(cwd, ":t")
-    MiniSessions.write(root_dir)
+    minisessions.write(root_dir)
   end, { desc = "Create session" })
 
   vim.api.nvim_create_autocmd("VimEnter", {
@@ -105,8 +229,15 @@ MiniConfig.sessions = function()
       local cwd = vim.fn.getcwd()
       local root_dir = vim.fn.fnamemodify(cwd, ":t")
 
-      if MiniSessions.detected[root_dir] ~= nil and vim.fn.argc() == 0 then
-        MiniSessions.read(root_dir)
+      if minisessions.detected[root_dir] ~= nil and vim.fn.argc() == 0 then
+        local choice = vim.fn.confirm(
+          string.format("Restore session '%s'?", root_dir),
+          "&Yes\n&No",
+          1 -- Default to Yes
+        )
+        if choice == 1 then
+          minisessions.read(root_dir)
+        end
       end
     end,
   })
@@ -169,13 +300,54 @@ MiniConfig.clue = function()
 end
 
 MiniConfig.bufremove = function()
-  require("mini.bufremove").setup()
-  vim.keymap.set("n", "<leader>bd", MiniBufremove.delete, { desc = "Delete current buffer" })
+  local minibufremove = require("mini.bufremove")
+  minibufremove.setup()
+  vim.keymap.set("n", "<leader>bd", minibufremove.delete, { desc = "Delete current buffer" })
   vim.keymap.set("n", "<leader>bc", function()
+    local current_buf = vim.api.nvim_get_current_buf()
+    local deleted_count = 0
+    local skipped_modified = 0
+
     for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do
-      MiniBufremove.delete(bufnr)
+      -- Safety checks: skip buffers that shouldn't be deleted
+      local should_skip = false
+
+      -- Skip if buffer is not valid
+      if not vim.api.nvim_buf_is_valid(bufnr) then
+        should_skip = true
+      end
+
+      -- Skip current buffer
+      if not should_skip and bufnr == current_buf then
+        should_skip = true
+      end
+
+      -- Skip modified buffers (unsaved changes)
+      if not should_skip and vim.bo[bufnr].modified then
+        should_skip = true
+        skipped_modified = skipped_modified + 1
+      end
+
+      -- Skip special buffers (terminal, quickfix, help, etc.)
+      if not should_skip and vim.bo[bufnr].buftype ~= "" then
+        should_skip = true
+      end
+
+      if not should_skip then
+        minibufremove.delete(bufnr)
+        deleted_count = deleted_count + 1
+      end
     end
-    MiniPick.builtin.files()
+
+    -- Notify user of cleanup results
+    if skipped_modified > 0 then
+      vim.notify(
+        string.format("Deleted %d buffers (%d modified skipped)", deleted_count, skipped_modified),
+        vim.log.levels.INFO
+      )
+    else
+      vim.notify(string.format("Deleted %d buffers", deleted_count), vim.log.levels.INFO)
+    end
   end, { desc = "Cleanup buffers" })
 end
 

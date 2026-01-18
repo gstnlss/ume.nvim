@@ -1,3 +1,9 @@
+-- Configure bashls with additional filetypes
+vim.lsp.config("bashls", {
+  filetypes = { "sh", "bash", "zsh" },
+})
+
+-- Enable all configured LSP clients
 vim.lsp.enable({
   "lua_ls",
   "ts_ls",
@@ -9,4 +15,6 @@ vim.lsp.enable({
   "cssls",
   "eslint",
   "tailwindcss",
+  "clangd",
+  "perlls",
 })
