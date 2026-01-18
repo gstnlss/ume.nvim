@@ -1,9 +1,6 @@
 return {
   "mbbill/undotree",
   config = function()
-    local utils = require("ume.utils")
-    utils.set_keymaps({
-      { "n", "<leader>uu", "<CMD>UndotreeToggle<CR>" },
-    })
+    vim.keymap.set("n", "<leader>uu", "<CMD>UndotreeToggle<CR>", { desc = "Toggle undo tree" })
   end,
 }
