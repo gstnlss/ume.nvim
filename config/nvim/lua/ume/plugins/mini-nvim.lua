@@ -383,8 +383,8 @@ MiniConfig.bufremove = function()
       -- Safety checks: skip buffers that shouldn't be deleted
       local should_skip = false
 
-      -- Skip if buffer is not valid
-      if not vim.api.nvim_buf_is_valid(bufnr) then
+      -- Skip if buffer is not valid OR not loaded (handles deleted buffers)
+      if not vim.api.nvim_buf_is_valid(bufnr) or not vim.api.nvim_buf_is_loaded(bufnr) then
         should_skip = true
       end
 
@@ -405,8 +405,10 @@ MiniConfig.bufremove = function()
       end
 
       if not should_skip then
-        minibufremove.delete(bufnr)
-        deleted_count = deleted_count + 1
+        local delete_success = minibufremove.delete(bufnr)
+        if delete_success then
+          deleted_count = deleted_count + 1
+        end
       end
     end
 

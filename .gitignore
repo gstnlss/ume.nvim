@@ -1,2 +1,5 @@
 lazy-lock.json
 .last_pulled_time
+
+# Local machine-specific configuration overrides
+config/nvim/lua/ume/config/local-overrides.lua
