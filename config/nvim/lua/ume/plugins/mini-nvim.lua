@@ -155,127 +155,161 @@ MiniConfig.pick = function()
         end
       end
 
+      -- Helper to check if a real LSP keymap (not unsupported) already exists
+      local function has_real_lsp_keymap(mode, lhs, bufnr)
+        local maps = vim.api.nvim_buf_get_keymap(bufnr, mode)
+        for _, map in ipairs(maps) do
+          if map.lhs == lhs then
+            -- Check if this is a real LSP keymap (not an unsupported placeholder)
+            local desc = map.desc or ""
+            if not desc:match("unsupported") then
+              return true
+            end
+          end
+        end
+        return false
+      end
+
       -- Set keymaps if supported, otherwise set fallback with notification
-      if client:supports_method("textDocument/codeAction") then
-        vim.keymap.set(
-          "n",
-          "gra",
-          vim.lsp.buf.code_action,
-          vim.tbl_extend("force", opts, { desc = "LSP code actions" })
-        )
-      else
-        vim.keymap.set(
-          "n",
-          "gra",
-          unsupported_notify("code actions"),
-          vim.tbl_extend("force", opts, { desc = "LSP code actions (unsupported)" })
-        )
+      if not has_real_lsp_keymap("n", "gra", bufnr) then
+        if client:supports_method("textDocument/codeAction") then
+          vim.keymap.set(
+            "n",
+            "gra",
+            vim.lsp.buf.code_action,
+            vim.tbl_extend("force", opts, { desc = "LSP code actions" })
+          )
+        else
+          vim.keymap.set(
+            "n",
+            "gra",
+            unsupported_notify("code actions"),
+            vim.tbl_extend("force", opts, { desc = "LSP code actions (unsupported)" })
+          )
+        end
       end
 
-      if client:supports_method("textDocument/implementation") then
-        vim.keymap.set("n", "gri", function()
-          smart_lsp_nav("textDocument/implementation", "implementation")
-        end, vim.tbl_extend("force", opts, { desc = "LSP implementation" }))
-      else
-        vim.keymap.set(
-          "n",
-          "gri",
-          unsupported_notify("implementation"),
-          vim.tbl_extend("force", opts, { desc = "LSP implementation (unsupported)" })
-        )
+      if not has_real_lsp_keymap("n", "gri", bufnr) then
+        if client:supports_method("textDocument/implementation") then
+          vim.keymap.set("n", "gri", function()
+            smart_lsp_nav("textDocument/implementation", "implementation")
+          end, vim.tbl_extend("force", opts, { desc = "LSP implementation" }))
+        else
+          vim.keymap.set(
+            "n",
+            "gri",
+            unsupported_notify("implementation"),
+            vim.tbl_extend("force", opts, { desc = "LSP implementation (unsupported)" })
+          )
+        end
       end
 
-      if client:supports_method("textDocument/rename") then
-        vim.keymap.set("n", "grn", vim.lsp.buf.rename, vim.tbl_extend("force", opts, { desc = "LSP rename" }))
-      else
-        vim.keymap.set(
-          "n",
-          "grn",
-          unsupported_notify("rename"),
-          vim.tbl_extend("force", opts, { desc = "LSP rename (unsupported)" })
-        )
+      if not has_real_lsp_keymap("n", "grn", bufnr) then
+        if client:supports_method("textDocument/rename") then
+          vim.keymap.set("n", "grn", vim.lsp.buf.rename, vim.tbl_extend("force", opts, { desc = "LSP rename" }))
+        else
+          vim.keymap.set(
+            "n",
+            "grn",
+            unsupported_notify("rename"),
+            vim.tbl_extend("force", opts, { desc = "LSP rename (unsupported)" })
+          )
+        end
       end
 
-      if client:supports_method("textDocument/references") then
-        vim.keymap.set("n", "grr", function()
-          smart_lsp_nav("textDocument/references", "references")
-        end, vim.tbl_extend("force", opts, { desc = "LSP references" }))
-      else
-        vim.keymap.set(
-          "n",
-          "grr",
-          unsupported_notify("references"),
-          vim.tbl_extend("force", opts, { desc = "LSP references (unsupported)" })
-        )
+      if not has_real_lsp_keymap("n", "grr", bufnr) then
+        if client:supports_method("textDocument/references") then
+          vim.keymap.set("n", "grr", function()
+            smart_lsp_nav("textDocument/references", "references")
+          end, vim.tbl_extend("force", opts, { desc = "LSP references" }))
+        else
+          vim.keymap.set(
+            "n",
+            "grr",
+            unsupported_notify("references"),
+            vim.tbl_extend("force", opts, { desc = "LSP references (unsupported)" })
+          )
+        end
       end
 
-      if client:supports_method("textDocument/typeDefinition") then
-        vim.keymap.set("n", "grt", function()
-          smart_lsp_nav("textDocument/typeDefinition", "type_definition")
-        end, vim.tbl_extend("force", opts, { desc = "LSP type definition" }))
-      else
-        vim.keymap.set(
-          "n",
-          "grt",
-          unsupported_notify("type definition"),
-          vim.tbl_extend("force", opts, { desc = "LSP type definition (unsupported)" })
-        )
+      if not has_real_lsp_keymap("n", "grt", bufnr) then
+        if client:supports_method("textDocument/typeDefinition") then
+          vim.keymap.set("n", "grt", function()
+            smart_lsp_nav("textDocument/typeDefinition", "type_definition")
+          end, vim.tbl_extend("force", opts, { desc = "LSP type definition" }))
+        else
+          vim.keymap.set(
+            "n",
+            "grt",
+            unsupported_notify("type definition"),
+            vim.tbl_extend("force", opts, { desc = "LSP type definition (unsupported)" })
+          )
+        end
       end
 
-      if client:supports_method("textDocument/definition") then
-        vim.keymap.set("n", "gd", function()
-          smart_lsp_nav("textDocument/definition", "definition")
-        end, vim.tbl_extend("force", opts, { desc = "LSP definition" }))
-      else
-        vim.keymap.set(
-          "n",
-          "gd",
-          unsupported_notify("definition"),
-          vim.tbl_extend("force", opts, { desc = "LSP definition (unsupported)" })
-        )
+      -- Only set keymap if no real LSP handler exists yet
+      if not has_real_lsp_keymap("n", "gd", bufnr) then
+        if client:supports_method("textDocument/definition") then
+          vim.keymap.set("n", "gd", function()
+            smart_lsp_nav("textDocument/definition", "definition")
+          end, vim.tbl_extend("force", opts, { desc = "LSP definition" }))
+        else
+          vim.keymap.set(
+            "n",
+            "gd",
+            unsupported_notify("definition"),
+            vim.tbl_extend("force", opts, { desc = "LSP definition (unsupported)" })
+          )
+        end
       end
 
-      if client:supports_method("textDocument/hover") then
-        vim.keymap.set("n", "K", vim.lsp.buf.hover, vim.tbl_extend("force", opts, { desc = "LSP hover" }))
-      else
-        vim.keymap.set(
-          "n",
-          "K",
-          unsupported_notify("hover"),
-          vim.tbl_extend("force", opts, { desc = "LSP hover (unsupported)" })
-        )
+      if not has_real_lsp_keymap("n", "K", bufnr) then
+        if client:supports_method("textDocument/hover") then
+          vim.keymap.set("n", "K", vim.lsp.buf.hover, vim.tbl_extend("force", opts, { desc = "LSP hover" }))
+        else
+          vim.keymap.set(
+            "n",
+            "K",
+            unsupported_notify("hover"),
+            vim.tbl_extend("force", opts, { desc = "LSP hover (unsupported)" })
+          )
+        end
       end
 
-      if client:supports_method("textDocument/documentSymbol") then
-        vim.keymap.set(
-          "n",
-          "<leader>fs",
-          ":Pick lsp scope='document_symbol'<CR>",
-          vim.tbl_extend("force", opts, { desc = "LSP document symbols" })
-        )
-      else
-        vim.keymap.set(
-          "n",
-          "<leader>fs",
-          unsupported_notify("document symbols"),
-          vim.tbl_extend("force", opts, { desc = "LSP document symbols (unsupported)" })
-        )
+      if not has_real_lsp_keymap("n", "<leader>fs", bufnr) then
+        if client:supports_method("textDocument/documentSymbol") then
+          vim.keymap.set(
+            "n",
+            "<leader>fs",
+            ":Pick lsp scope='document_symbol'<CR>",
+            vim.tbl_extend("force", opts, { desc = "LSP document symbols" })
+          )
+        else
+          vim.keymap.set(
+            "n",
+            "<leader>fs",
+            unsupported_notify("document symbols"),
+            vim.tbl_extend("force", opts, { desc = "LSP document symbols (unsupported)" })
+          )
+        end
       end
 
-      if client:supports_method("workspace/symbol") then
-        vim.keymap.set(
-          "n",
-          "<leader>fS",
-          ":Pick lsp scope='workspace_symbol'<CR>",
-          vim.tbl_extend("force", opts, { desc = "LSP workspace symbols" })
-        )
-      else
-        vim.keymap.set(
-          "n",
-          "<leader>fS",
-          unsupported_notify("workspace symbols"),
-          vim.tbl_extend("force", opts, { desc = "LSP workspace symbols (unsupported)" })
-        )
+      if not has_real_lsp_keymap("n", "<leader>fS", bufnr) then
+        if client:supports_method("workspace/symbol") then
+          vim.keymap.set(
+            "n",
+            "<leader>fS",
+            ":Pick lsp scope='workspace_symbol'<CR>",
+            vim.tbl_extend("force", opts, { desc = "LSP workspace symbols" })
+          )
+        else
+          vim.keymap.set(
+            "n",
+            "<leader>fS",
+            unsupported_notify("workspace symbols"),
+            vim.tbl_extend("force", opts, { desc = "LSP workspace symbols (unsupported)" })
+          )
+        end
       end
     end,
   })
