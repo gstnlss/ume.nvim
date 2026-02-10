@@ -418,7 +418,7 @@ MiniConfig.bufremove = function()
       local should_skip = false
 
       -- Skip if buffer is not valid OR not loaded (handles deleted buffers)
-      if not vim.api.nvim_buf_is_valid(bufnr) or not vim.api.nvim_buf_is_loaded(bufnr) then
+      if not vim.api.nvim_buf_is_valid(bufnr) then
         should_skip = true
       end
 
