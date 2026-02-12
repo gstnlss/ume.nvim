@@ -4,6 +4,15 @@ return {
   config = function()
     local config = require("nvim-treesitter.configs")
 
+    local parser_config = require("nvim-treesitter.parsers").get_parser_configs()
+    parser_config.haml = {
+      install_info = {
+        url = "https://github.com/vitallium/tree-sitter-haml",
+        files = { "src/parser.c", "src/scanner.c" },
+        branch = "main",
+      },
+    }
+
     config.setup({
       -- Explicitly list parsers instead of auto_install to prevent silent failures
       -- when C compiler is not available
@@ -25,6 +34,7 @@ return {
         -- Markup/data languages
         "json",
         "html",
+        "haml",
         "css",
         "bash",
         -- Additional useful parsers
